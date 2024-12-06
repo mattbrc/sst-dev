@@ -14,8 +14,11 @@ export const api = new sst.aws.ApiGatewayV2("Api", {
     route: {
       handler: {
         link: [table],
-      }
-    }
+      },
+      args: {
+        auth: { iam: true },
+      },
+    },
   }
 });
 
