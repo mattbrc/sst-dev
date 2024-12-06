@@ -10,6 +10,9 @@
     "typescript": "5.6.2"
   },
   "dependencies": {
-    "sst": "^3.2.16"
+    "@aws-sdk/client-dynamodb": "^3.705.0",
+    "@aws-sdk/lib-dynamodb": "^3.705.0",
+    "sst": "^3.2.16",
+    "uuid": "^11.0.3"
   }
 }
