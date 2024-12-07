@@ -17,6 +17,7 @@ import { useAppContext } from "../lib/contextLib";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { onError } from "../lib/errorLib";
+import { ISignUpResult } from "amazon-cognito-identity-js";
 
 const signupSchema = z
   .object({
@@ -30,13 +31,13 @@ const signupSchema = z
   });
 
 const confirmationSchema = z.object({
-  confirmationCode: z.string().min(1, "Confirmation code is required"),
+  inputCode: z.string().min(1, "Confirmation code is required"),
 });
 
 export default function Signup() {
   const { userHasAuthenticated } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
-  const [newUser, setNewUser] = useState<null | string>(null);
+  const [newUser, setNewUser] = useState<null | ISignUpResult>(null);
   const nav = useNavigate();
 
   const signupForm = useForm<z.infer<typeof signupSchema>>({
@@ -51,18 +52,18 @@ export default function Signup() {
   const confirmationForm = useForm<z.infer<typeof confirmationSchema>>({
     resolver: zodResolver(confirmationSchema),
     defaultValues: {
-      confirmationCode: "",
+      // inputCode: "",
     },
   });
 
   async function onSignupSubmit(values: z.infer<typeof signupSchema>) {
     setIsLoading(true);
     try {
-      await Auth.signUp({
+      const signUpResult = await Auth.signUp({
         username: values.email,
         password: values.password,
       });
-      setNewUser(values.email);
+      setNewUser(signUpResult);
     } catch (error) {
       onError(error);
     } finally {
@@ -75,8 +76,12 @@ export default function Signup() {
   ) {
     setIsLoading(true);
     try {
-      await Auth.confirmSignUp(newUser!, values.confirmationCode);
-      await Auth.signIn(newUser!, signupForm.getValues().password);
+      await Auth.confirmSignUp(signupForm.getValues().email, values.inputCode);
+      console.log(values);
+      await Auth.signIn(
+        signupForm.getValues().email,
+        signupForm.getValues().password
+      );
       userHasAuthenticated(true);
       nav("/");
     } catch (error) {
@@ -92,24 +97,23 @@ export default function Signup() {
         <form
           onSubmit={confirmationForm.handleSubmit(onConfirmationSubmit)}
           className="space-y-6"
+          autoComplete="off"
         >
           <Stack gap={3}>
             <FormField
               control={confirmationForm.control}
-              name="confirmationCode"
+              name="inputCode"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Confirmation Code</FormLabel>
                   <FormControl>
-                    <Input type="text" autoFocus {...field} />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
-                  <p className="text-sm text-muted-foreground">
-                    Please check your email for the code.
-                  </p>
                 </FormItem>
               )}
             />
+
             <div className="pt-4">
               <Button type="submit" disabled={isLoading}>
                 {isLoading ? "Verifying..." : "Verify"}
