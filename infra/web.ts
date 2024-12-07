@@ -18,11 +18,11 @@ export const frontend = new sst.aws.StaticSite("Frontend", {
     VITE_IDENTITY_POOL_ID: identityPool.id,
     VITE_USER_POOL_CLIENT_ID: userPoolClient.id,
   },
-  domain:
-  $app.stage === "production"
-      ? {
-          name: "prod.d2h5pd6laswf5z.cloudfront.net",
-          redirects: ["www.prod.d2h5pd6laswf5z.cloudfront.net"],
-      }
-    : undefined,
+  // domain:
+  // $app.stage === "production"
+  //     ? {
+  //         name: "prod.d2h5pd6laswf5z.cloudfront.net",
+  //         redirects: ["www.prod.d2h5pd6laswf5z.cloudfront.net"],
+  //     }
+  //   : undefined,
 });
