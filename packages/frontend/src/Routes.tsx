@@ -1,12 +1,16 @@
 import { Route, Routes } from "react-router-dom";
-import Home from "./_components/Home";
-import NotFound from "./_components/NotFound";
+import Home from "./containers/Home";
+import NotFound from "./containers/NotFound";
+import Login from "./containers/Login";
+import Signup from "./containers/Signup";
 
 export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="*" element={<NotFound />} />;
+      <Route path="*" element={<NotFound />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
     </Routes>
   );
 }
