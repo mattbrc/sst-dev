@@ -12,5 +12,16 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     }
-  }
+  },
+  // optional solution to fix buffer (need import in main.tsx)
+  // define: {
+  //   global: {},
+  // },
+  // optimizeDeps: {
+  //   esbuildOptions: {
+  //     define: {
+  //       global: 'globalThis',
+  //     },
+  //   },
+  // }
 })
