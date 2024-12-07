@@ -61,8 +61,14 @@ function App() {
                 >
                   Notes
                 </Link>
+                <Link
+                  to="/settings"
+                  className="transition-colors hover:text-gray-600"
+                >
+                  Settings
+                </Link>
                 {isAuthenticated ? (
-                  <Button variant="ghost" onClick={handleLogout}>
+                  <Button variant="outline" onClick={handleLogout}>
                     Logout
                   </Button>
                 ) : (

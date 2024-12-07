@@ -5,7 +5,7 @@ import { Button } from "../components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
+  // FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -14,8 +14,8 @@ import {
 import { Input } from "../components/ui/input";
 import { Stack } from "../components/Stack";
 import { Auth } from "aws-amplify";
-import { useAppContext } from "../lib/contextLib";
-import { useNavigate } from "react-router-dom";
+// import { useAppContext } from "../lib/contextLib";
+// import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { onError } from "../lib/errorLib";
 import { ISignUpResult } from "amazon-cognito-identity-js";

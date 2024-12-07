@@ -14,7 +14,7 @@ import { Input } from "../components/ui/input";
 import { Stack } from "../components/Stack";
 import { Auth } from "aws-amplify";
 import { useAppContext } from "../lib/contextLib";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { onError } from "../lib/errorLib";
 
@@ -26,7 +26,7 @@ const formSchema = z.object({
 export default function Login() {
   const { userHasAuthenticated } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
-  const nav = useNavigate();
+  // const nav = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -41,7 +41,7 @@ export default function Login() {
     try {
       await Auth.signIn(values.email, values.password);
       userHasAuthenticated(true);
-      nav("/");
+      // nav("/");
     } catch (error) {
       onError(error);
     } finally {
