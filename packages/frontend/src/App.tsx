@@ -47,7 +47,7 @@ function App() {
             <nav className="flex items-center justify-between">
               {/* Logo/Brand */}
               <Link to="/" className="text-lg font-semibold">
-                SST Dev Notes
+                SST AWS Testing
               </Link>
 
               {/* Desktop Navigation */}
