@@ -5,6 +5,7 @@ import { Button } from "../components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { onError } from "../lib/errorLib";
 import { ISignUpResult } from "amazon-cognito-identity-js";
+import ConfirmationForm from "../components/confirmation-form";
 
 const signupSchema = z
   .object({
@@ -30,15 +32,15 @@ const signupSchema = z
     path: ["confirmPassword"],
   });
 
-const confirmationSchema = z.object({
-  inputCode: z.string().min(1, "Confirmation code is required"),
-});
+// const confirmationSchema = z.object({
+//   inputCode: z.string().min(1, "Confirmation code is required"),
+// });
 
 export default function Signup() {
-  const { userHasAuthenticated } = useAppContext();
+  // const { userHasAuthenticated } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
   const [newUser, setNewUser] = useState<null | ISignUpResult>(null);
-  const nav = useNavigate();
+  // const nav = useNavigate();
 
   const signupForm = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
@@ -49,12 +51,12 @@ export default function Signup() {
     },
   });
 
-  const confirmationForm = useForm<z.infer<typeof confirmationSchema>>({
-    resolver: zodResolver(confirmationSchema),
-    defaultValues: {
-      // inputCode: "",
-    },
-  });
+  // const confirmationForm = useForm<z.infer<typeof confirmationSchema>>({
+  //   resolver: zodResolver(confirmationSchema),
+  //   defaultValues: {
+  //     inputCode: "",
+  //   },
+  // });
 
   async function onSignupSubmit(values: z.infer<typeof signupSchema>) {
     setIsLoading(true);
@@ -71,59 +73,62 @@ export default function Signup() {
     }
   }
 
-  async function onConfirmationSubmit(
-    values: z.infer<typeof confirmationSchema>
-  ) {
-    setIsLoading(true);
-    try {
-      await Auth.confirmSignUp(signupForm.getValues().email, values.inputCode);
-      console.log(values);
-      await Auth.signIn(
-        signupForm.getValues().email,
-        signupForm.getValues().password
-      );
-      userHasAuthenticated(true);
-      nav("/");
-    } catch (error) {
-      onError(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  // async function onConfirmationSubmit(
+  //   values: z.infer<typeof confirmationSchema>
+  // ) {
+  //   setIsLoading(true);
+  //   try {
+  //     await Auth.confirmSignUp(signupForm.getValues().email, values.inputCode);
+  //     console.log(values);
+  //     await Auth.signIn(
+  //       signupForm.getValues().email,
+  //       signupForm.getValues().password
+  //     );
+  //     userHasAuthenticated(true);
+  //     nav("/");
+  //   } catch (error) {
+  //     onError(error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // }
 
-  function renderConfirmationForm() {
-    return (
-      <Form {...confirmationForm}>
-        <form
-          onSubmit={confirmationForm.handleSubmit(onConfirmationSubmit)}
-          className="space-y-6"
-          autoComplete="off"
-        >
-          <Stack gap={3}>
-            <FormField
-              control={confirmationForm.control}
-              name="inputCode"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirmation Code</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+  // function renderConfirmationForm() {
+  //   return (
+  //     <Form {...confirmationForm}>
+  //       <form
+  //         onSubmit={confirmationForm.handleSubmit(onConfirmationSubmit)}
+  //         className="space-y-6"
+  //         autoComplete="off"
+  //       >
+  //         <Stack gap={3}>
+  //           <FormField
+  //             control={confirmationForm.control}
+  //             name="inputCode"
+  //             render={({ field }) => (
+  //               <FormItem>
+  //                 <FormLabel>Confirmation Code</FormLabel>
+  //                 <FormControl>
+  //                   <Input {...field} />
+  //                 </FormControl>
+  //                 <FormMessage />
+  //                 <FormDescription>
+  //                   Check your email for the confirmation code.
+  //                 </FormDescription>
+  //               </FormItem>
+  //             )}
+  //           />
 
-            <div className="pt-4">
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Verifying..." : "Verify"}
-              </Button>
-            </div>
-          </Stack>
-        </form>
-      </Form>
-    );
-  }
+  //           <div className="pt-4">
+  //             <Button type="submit" disabled={isLoading}>
+  //               {isLoading ? "Verifying..." : "Verify"}
+  //             </Button>
+  //           </div>
+  //         </Stack>
+  //       </form>
+  //     </Form>
+  //   );
+  // }
 
   function renderSignupForm() {
     return (
@@ -186,7 +191,12 @@ export default function Signup() {
   return (
     <div className="container flex flex-col items-center justify-center w-screen">
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-        {newUser === null ? renderSignupForm() : renderConfirmationForm()}
+        {/* {newUser === null ? renderSignupForm() : renderConfirmationForm()} */}
+        {newUser === null ? (
+          renderSignupForm()
+        ) : (
+          <ConfirmationForm email={signupForm.getValues().email} />
+        )}
       </div>
     </div>
   );
